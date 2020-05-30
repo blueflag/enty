@@ -4,7 +4,6 @@ import EntityApi from '../EntityApi';
 import {ObjectSchema, EntitySchema} from 'enty';
 import equals from 'unmutable/equals';
 import {UndefinedIdError} from 'enty/lib/util/Error';
-import RequestState from 'enty-state/lib/data/RequestState';
 
 
 //
@@ -45,8 +44,9 @@ function setupTests() {
                     entities: {},
 
                     // Hashed key of 'baz'
-                    response: {'1379365508': {data: 'initial-baz'}},
-                    requestState: {'1379365508': RequestState.success()}
+                    request: {
+                        '1379365508': {requestState: 'success', response: {data: 'initial-baz'}}
+                    }
                 }}
                 children={<Child {...props} />}
             />;
@@ -85,13 +85,14 @@ expect.extend([
     rr[name] = function(wrapper, expectedResponse) {
         let {printReceived, printExpected} = this.utils;
         let message = wrapper.find('ExpectsMessage').prop('message');
-        let {requestState} = message;
-        let response = requestState.isError ? message.requestError : message.response;
+        let {isError} = message;
+        let response = isError ? message.requestError : message.response;
 
-        let passType = requestState[expectedState];
+        let passType = message[expectedState];
         let passResponse = equals(response)(expectedResponse);
         let pass = passType && passResponse;
-        let type = input.find(([, state]) => requestState[state]) || [];
+
+        let type = input.find(([, state]) => message[state]) || [];
         return pass
             ? {pass: true, message: () => `expect(wrapper).not.${name}()\n\n` +
                 `Received: ${printReceived(expectedName)}`}

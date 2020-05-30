@@ -54,7 +54,7 @@ function UserAvatar(props) {
         .refetchingMap(() => <Loader/>)
         .successMap(() => <img src={userMessage.get('avatar')} />)
         .errorMap(() => <span>user not found :(</span>)
-        .value();
+        .value;
 }
 ```
 
@@ -70,7 +70,7 @@ function UserAvatar(props) {
     return userMessage.requestState
         .successMap(() => <img src={userMessage.get('avatar')} />)
         .errorMap(() => <span>{userMessage.requestError.message}</span>)
-        .value();
+        .value;
 }
 ```
 
@@ -113,16 +113,6 @@ Returns the value at the provided key pathm or defaultValue if nothing is found.
 const name = message.getIn(['user', 'name'], '-');
 ```
 
-
-### .updateRequestState()
-**type:** `(updater: RequestState => RequestState) => Message`  
-
-Update the requestState via a function. Allows the user to change a request state and pass the 
-message on. _Can be used to force the rendering of a specific branch._
-
-```js
-message.updateRequestState(requestState => requestState.toError());
-```
 
 ### .toEmpty()
 **type:** `() => Message<Empty>;`

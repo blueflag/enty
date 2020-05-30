@@ -1,7 +1,7 @@
 // @flow
 import Message from 'enty-state/lib/data/Message';
-import RequestState from 'enty-state/lib/data/RequestState';
 import {useState, useEffect, useContext, useCallback, useMemo, useRef} from 'react';
+import getIn from 'unmutable/getIn';
 
 type RequestHookConfig = {
     actionType: string,
@@ -18,7 +18,7 @@ type Config = {
 export default function RequestHookFactory(context: *, config: RequestHookConfig) {
     const {requestAction, resetAction, removeEntityAction, generateResultKey} = config;
 
-    return <R>(config: Config = {}) => {
+    return (config: Config = {}) => {
         const [derivedResponseKey, setDerivedResponseKey] = useState('Unknown');
         const responseKey = config.key ? generateResultKey(config.key) : derivedResponseKey;
         const store = useContext(context);
@@ -27,7 +27,7 @@ export default function RequestHookFactory(context: *, config: RequestHookConfig
         const responseRef = useRef();
         const mounted = useRef(true);
 
-        let requestState = state.requestState[responseKey] || RequestState.empty();
+        let messageData = state.request[responseKey] || {};
 
         useEffect(() => {
             return () => {
@@ -36,15 +36,14 @@ export default function RequestHookFactory(context: *, config: RequestHookConfig
         }, []);
 
         let response = useMemo(() => {
-            const schema = state.baseSchema;
-            const result = state.response[responseKey];
-            const entities = state.entities;
-            if(schema) {
-                return schema.denormalize({entities, result});
+            const {baseSchema, request, entities} = state;
+            const result = getIn([responseKey, 'response'])(request);
+            if(baseSchema) {
+                return baseSchema.denormalize({entities, result});
             }
             return result;
 
-        }, [requestState, responseKey, state.stats.responseCount]);
+        }, [messageData.requestState, responseKey, state.stats.responseCount]);
 
         responseRef.current = response;
 
@@ -57,15 +56,14 @@ export default function RequestHookFactory(context: *, config: RequestHookConfig
         let reset = useCallback(() => dispatch(resetAction(responseKey)));
         let removeEntity = useCallback((type, id) => dispatch(removeEntityAction(type, id)));
 
-
-        return useMemo(() => new Message<R>({
+        return useMemo(() => new Message({
+            ...messageData,
             removeEntity,
             request,
-            requestError: state.error[responseKey],
-            requestState,
+            requestError: getIn([responseKey, 'requestError'])(state.request),
             reset,
             response,
             responseKey
-        }), [requestState, response, responseKey]);
+        }), [messageData.requestState, response]);
     };
 }
