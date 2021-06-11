@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "esModuleInterop": true,
+    "lib": ["ESNext"],
+    "typeRoots": ["./types", "./node_modules/@types"],
+    "allowJs": true,
+    "target": "es5"
+  },
+  "include": ["./src/**/*", "types/jest.d.ts"]
+}

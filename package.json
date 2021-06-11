@@ -1,16 +1,25 @@
 {
   "release": {
-    "name": "SharpGrouse"
+    "name": "TemptingDodo"
   },
   "private": true,
   "scripts": {
     "prep": "yarn && yarn lerna bootstrap",
-    "build": "lerna run build --parallel --",
+    "build": "lerna run build",
     "watch": "lerna run watch --parallel --",
-    "test-all": "lerna run test-all --parallel --",
-    "deploy-docs": "yarn lerna --scope enty-docs run deploy"
+    "test-all": "lerna run test-all",
+    "format": "yarn prettier --write .",
+    "format-quick": "yarn pretty-quick --staged"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn format-quick"
+    }
   },
   "devDependencies": {
-    "lerna": "^3.4.3"
+    "lerna": "^3.4.3",
+    "husky": "^6.0.0",
+    "prettier": "^2.3.0",
+    "pretty-quick": "^3.1.0"
   }
 }
