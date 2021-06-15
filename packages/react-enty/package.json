@@ -1,48 +1,66 @@
 {
   "name": "react-enty",
-  "version": "1.1.0",
+  "version": "2.0.0-alpha.2",
   "description": "React bindings for Enty",
-  "main": "lib/index.js",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/react-enty.esm.js",
   "license": "MIT",
   "author": "Allan Hortle",
+  "size-limit": [
+    {
+      "path": "dist/react-enty.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/react-enty.esm.js",
+      "limit": "10 KB"
+    }
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/blueflag/enty.git"
+    "url": "git+https://github.com/92green/enty.git"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "bugs": {
-    "url": "https://github.com/blueflag/enty/issues"
+    "url": "https://github.com/92green/enty/issues"
   },
   "private": false,
   "scripts": {
+    "build": "yarn tsdx build",
+    "lint": "yarn tsdx lint src",
     "prepublishOnly": "yarn build",
-    "build": "rm -rf lib && NODE_ENV=production yarn babel src --out-dir lib --ignore '**/__tests__/*.js'",
-    "watch": "yarn build -w",
-    "flow": "flow check",
-    "lint": "blueflag-test lint",
-    "test": "yarn jest --maxWorkers=1",
-    "test-all": "yarn lint && yarn flow && yarn test"
+    "test": "yarn jest",
+    "test-all": "yarn test && yarn build",
+    "watch": "yarn tsdx watch",
+    "size": "size-limit"
   },
   "peerDependencies": {
-    "react": "^16.8.3"
+    "react": "^16.x.x"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.0",
-    "@babel/core": "^7.5.4",
-    "@testing-library/react-hooks": "^1.1.0",
-    "babel-plugin-extract-flow-types": "^1.0.0",
-    "babel-preset-blueflag": "^1.0.1",
-    "blueflag-test": "^0.22.0",
-    "flow-bin": "^0.104.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-test-renderer": "^16.8.6"
+    "@size-limit/preset-small-lib": "^4.11.0",
+    "@testing-library/jest-dom": "^5.12.0",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/react-hooks": "^6.0.0",
+    "@types/enzyme": "^3.10.8",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.6.0",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.1",
+    "enzyme": "^3.11.0",
+    "jest": "^26.6.3",
+    "jest-enzyme": "^7.1.2",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "size-limit": "^4.11.0",
+    "ts-jest": "^26.5.6",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.2.0",
+    "typescript": "^4.3.2"
   },
   "dependencies": {
-    "enty": "^1.1.0",
-    "enty-state": "^1.1.0",
-    "unmutable": "^0.46.0"
+    "enty": "^2.0.0-alpha.2"
   }
 }

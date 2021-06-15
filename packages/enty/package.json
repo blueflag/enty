@@ -1,8 +1,20 @@
 {
   "name": "enty",
-  "version": "1.1.0",
-  "description": "An opinionated set of redux tools to cut down on boilerplate",
-  "main": "lib/index.js",
+  "version": "2.0.0-alpha.2",
+  "description": "Normalizing schemas",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "module": "dist/enty.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/enty.cjs.production.min.js",
+      "limit": "5 KB"
+    },
+    {
+      "path": "dist/enty.esm.js",
+      "limit": "5 KB"
+    }
+  ],
   "license": "MIT",
   "author": "Allan Hortle",
   "repository": {
@@ -10,30 +22,31 @@
     "url": "git+https://github.com/blueflag/enty.git"
   },
   "files": [
-    "lib"
+    "dist"
   ],
   "bugs": {
     "url": "https://github.com/blueflag/enty/issues"
   },
   "private": false,
   "scripts": {
+    "build": "yarn tsdx build",
+    "lint": "yarn tsdx lint src",
     "prepublishOnly": "yarn build",
-    "build": "rm -rf lib && NODE_ENV=production yarn babel src --out-dir lib --ignore '**/__tests__/*.js'",
-    "watch": "yarn build -w",
-    "flow": "flow check",
-    "lint": "blueflag-test lint",
-    "test": "yarn jest --maxWorkers=1",
-    "test-all": "yarn lint && yarn flow && yarn test"
+    "test": "yarn jest",
+    "test-all": "yarn lint && yarn test && yarn build",
+    "watch": "yarn tsdx watch",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.0",
-    "@babel/core": "^7.5.4",
-    "babel-plugin-extract-flow-types": "^1.0.0",
-    "babel-preset-blueflag": "^1.0.1",
-    "blueflag-test": "^0.22.0",
-    "flow-bin": "^0.104.0"
-  },
-  "dependencies": {
-    "unmutable": "^0.46.0"
+    "@size-limit/preset-small-lib": "^4.11.0",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.6.0",
+    "jest": "^26.6.3",
+    "size-limit": "^4.11.0",
+    "ts-jest": "^26.5.6",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.2.0",
+    "typescript": "^4.3.2"
   }
 }
